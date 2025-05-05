@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-//import { startNetworkLogging } from 'react-native-network-logger';
+import { startNetworkLogging } from 'react-native-network-logger';
 
 import { AppStateProvider } from '@services/appState';
 import reactotron from '@services/reactotron';
@@ -7,7 +7,7 @@ import reactotron from '@services/reactotron';
 if (__DEV__) {
   reactotron();
 } else {
-  //startNetworkLogging();
+  startNetworkLogging();
 }
 
 const App = () => (
