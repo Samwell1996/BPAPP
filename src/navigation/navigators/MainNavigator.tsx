@@ -12,7 +12,6 @@ import {
 } from '@constants/navigation';
 import { MODALS } from '@navigation/modals';
 import { SCREENS } from '@navigation/screens';
-import withScreen from '@navigation/withScreen';
 
 import { screenStackScreenOptions } from '../stackOptions';
 import { ModalKey } from '../types';
@@ -23,10 +22,7 @@ import { createScreenEntries } from './utils';
 
 const NativeStack = createNativeStackNavigator();
 
-const modalsEntries: [ModalKey, React.ComponentType<any>][] = Object.entries(
-  MODALS,
-).map(([name, component]) => [name as ModalKey, withScreen(component)]);
-
+const modalsEntries = createScreenEntries(MODALS);
 const screenEntries = createScreenEntries(SCREENS);
 
 const getDefaultModalOptions = (
@@ -84,13 +80,11 @@ const MainNavigator = () => {
   );
 };
 
-const MainNavigatorStack = withScreen(MainNavigator);
-
 const MainStack = () => (
   <NativeStack.Navigator screenOptions={mainStackScreenOptions}>
     <NativeStack.Screen
       name={NAVIGATOR_NAMES.MAIN_NAVIGATOR}
-      component={MainNavigatorStack}
+      component={MainNavigator}
     />
     {modalsEntries.map(([name, component]) => (
       <NativeStack.Screen

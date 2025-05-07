@@ -2,7 +2,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { SCREEN_NAMES_UNAUTHORIZED } from '@constants/navigation';
 import { SCREENS_UNAUTHORIZED } from '@navigation/screens';
-import withScreen from '@navigation/withScreen';
 
 import { screenStackScreenOptions } from '../stackOptions';
 import { createScreenEntries } from './utils';
@@ -22,4 +21,4 @@ const UnAuthorizedNavigator = () => (
   </NativeStack.Navigator>
 );
 
-export default withScreen(UnAuthorizedNavigator);
+export default UnAuthorizedNavigator;
