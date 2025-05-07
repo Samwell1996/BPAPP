@@ -1,5 +1,5 @@
+import { NAVIGATOR_NAMES, MODAL_NAMES } from '@constants/navigation';
 import { createTruthMapUsingArrayOfKeys, createMap } from '@services/maps';
-import { NAVIGATOR_NAMES, MODAL_NAMES } from 'src/constants/navigation';
 
 const PARENT_NAVIGATOR_NAMES = createMap(Object.values(NAVIGATOR_NAMES));
 

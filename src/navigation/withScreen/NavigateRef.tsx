@@ -6,7 +6,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 
-import refs from 'src/services/navigationRefs';
+import refs from '@services/navigationRefs';
 
 import { isNestedScreen } from './utils';
 

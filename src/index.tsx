@@ -1,4 +1,3 @@
-import { View } from 'react-native';
 import { startNetworkLogging } from 'react-native-network-logger';
 
 import NavigationContainer from '@navigation/index';
@@ -14,9 +13,7 @@ if (__DEV__) {
 //TODO:: add portal for modals in fade in modal ?
 const App = () => (
   <AppStateProvider>
-    <NavigationContainer>
-      <View style={{ backgroundColor: 'red', flex: 1 }} />
-    </NavigationContainer>
+    <NavigationContainer />
   </AppStateProvider>
 );
 
