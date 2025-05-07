@@ -4,10 +4,10 @@ import { LINKING } from '@constants/linking';
 import { SCREEN_NAMES, SCREEN_NAMES_UNAUTHORIZED } from '@constants/navigation';
 
 export const SCREENS_TAB = {
-  [SCREEN_NAMES.PROFILE]: {
+  [SCREEN_NAMES.EXPLORE]: {
     screen: register({
-      name: SCREEN_NAMES.PROFILE,
-      loader: () => import('@screens/Profile'),
+      name: SCREEN_NAMES.EXPLORE,
+      loader: () => import('@screens/Explore'),
     }),
   },
   [SCREEN_NAMES.MARKETPLACE]: {
@@ -17,10 +17,10 @@ export const SCREENS_TAB = {
     }),
     path: LINKING[SCREEN_NAMES.MARKETPLACE],
   },
-  [SCREEN_NAMES.EXPLORE]: {
+  [SCREEN_NAMES.PROFILE]: {
     screen: register({
-      name: SCREEN_NAMES.EXPLORE,
-      loader: () => import('@screens/Explore'),
+      name: SCREEN_NAMES.PROFILE,
+      loader: () => import('@screens/Profile'),
     }),
   },
 };
