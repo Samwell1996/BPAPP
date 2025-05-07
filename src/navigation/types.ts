@@ -1,5 +1,12 @@
 import { LINKING } from '@constants/linking';
-import { APP_SCREENS_NAMES } from '@constants/navigation';
+import {
+  APP_SCREENS_NAMES,
+  ManualParams,
+  MODAL_NAMES,
+  SCREEN_NAMES,
+} from '@constants/navigation';
+
+import { SCREENS_UNAUTHORIZED } from './screens';
 
 type Merge<A, B> = {
   [K in keyof A | keyof B]: K extends keyof B
@@ -21,7 +28,14 @@ type ExtractRouteParams<T extends string | null | undefined> =
           : {};
 
 type NormalizeEmpty<T> = keyof T extends never ? undefined : T;
-type ScreenName = (typeof APP_SCREENS_NAMES)[keyof typeof APP_SCREENS_NAMES];
+
+export type ModalKey = (typeof MODAL_NAMES)[keyof typeof MODAL_NAMES];
+export type ScreenKey = (typeof SCREEN_NAMES)[keyof typeof SCREEN_NAMES];
+export type UnAuthorizedScreenKey =
+  (typeof SCREENS_UNAUTHORIZED)[keyof typeof SCREENS_UNAUTHORIZED];
+export type AppScreenKey =
+  (typeof APP_SCREENS_NAMES)[keyof typeof APP_SCREENS_NAMES];
+
 type LinkingPath<S extends string> = S extends keyof typeof LINKING
   ? (typeof LINKING)[S] extends string
     ? (typeof LINKING)[S]
@@ -29,5 +43,7 @@ type LinkingPath<S extends string> = S extends keyof typeof LINKING
   : undefined;
 
 export type RootStackParamList = {
-  [S in ScreenName]: NormalizeEmpty<ExtractRouteParams<LinkingPath<S>>>;
+  [S in ScreenKey | keyof ManualParams]: S extends keyof ManualParams
+    ? ManualParams[S]
+    : NormalizeEmpty<ExtractRouteParams<LinkingPath<S>>>;
 };

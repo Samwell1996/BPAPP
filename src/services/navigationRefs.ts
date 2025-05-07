@@ -1,10 +1,22 @@
-/*** @description: for internal purpose, do not use it directly in components/screens etc. */
-import { NavigationProp } from '@react-navigation/native';
+import type {
+  NavigationContainerRefWithCurrent,
+  NavigationProp,
+} from '@react-navigation/native';
 
-import { RootStackParamList } from '@navigation/types';
+import type { RootStackParamList } from '@navigation/types';
 
+/**
+ * Internal reference store for top-level navigation
+ * and imperatively called `.navigate` method.
+ */
 type NavigateType = NavigationProp<RootStackParamList>['navigate'];
 
-const refs = { navigator: null, navigate: null as NavigateType | null };
+const refs: {
+  navigator: NavigationContainerRefWithCurrent<RootStackParamList> | null;
+  navigate: NavigateType | null;
+} = {
+  navigator: null,
+  navigate: null,
+};
 
 export default refs;
