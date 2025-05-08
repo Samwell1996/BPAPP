@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import { useMemo, createContext, useRef, useCallback } from 'react';
 
 import {
@@ -95,7 +96,7 @@ const useOneTimeSelector = <S, R>(
       valueRef.current = value;
       return value || null;
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [selector],
   );
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import {
   createContext,
   useContext,
@@ -53,7 +54,6 @@ const StoreProvider = ({
       store.value = value;
       store.notify();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (

@@ -29,6 +29,8 @@ module.exports = defineConfig([
         ecmaFeatures: {
           jsx: true,
         },
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
       },
     },
 
@@ -47,10 +49,12 @@ module.exports = defineConfig([
         version: 'detect',
       },
       'import/resolver': {
+        typescript: {
+          project: './tsconfig.json',
+        },
         node: {
           extensions: ['.js', '.ts', '.tsx', '.jsx'],
         },
-        typescript: {},
         'babel-module': {},
       },
     },
@@ -86,16 +90,34 @@ module.exports = defineConfig([
       // Import
       'import/no-unresolved': ['error'],
       'import/no-extraneous-dependencies': ['error'],
-      'no-restricted-imports': [
-      'error',
-      {
-        paths: [
+      "no-restricted-imports": [
+        "error",
         {
-          name: 'react',
-          importNames: ['default'],
-          message: 'Starting from React 17, you no longer need to import React in files using JSX.',
-          }],
-        },
+          "paths": [
+            {
+              name: 'react',
+              importNames: ['default'],
+              message: 'Starting from React 17, you no longer need to import React in files using JSX.',
+            },
+            {
+              "name": "react-native",
+              "importNames": ["Image"],
+              "message": "Please use 'react-native-fast-image' instead, as it has built-in image caching mechanisms."
+            }
+          ],
+          "patterns": [
+            {
+              "group": ["@react-navigation/**"],
+              "importNames": ["useNavigation"],
+              "message": "Please use our 'import { useNavigation } from '@hooks/navigation' instead."
+            },
+            {
+              "group": ["@react-navigation/**"],
+              "importNames": ["useRoute"],
+              "message": "Please use our 'import { useNavigationParam } from '@hooks/navigation' instead."
+            }
+          ]
+        }
       ],
       'import/order': [
         'error',
@@ -142,7 +164,6 @@ module.exports = defineConfig([
 
       // React Hooks
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'error',
     },
-  },
+  }
 ]);

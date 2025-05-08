@@ -43,7 +43,7 @@ type LinkingPath<S extends string> = S extends keyof typeof LINKING
   : undefined;
 
 export type RootStackParamList = {
-  [S in ScreenKey | keyof ManualParams]: S extends keyof ManualParams
+  [S in AppScreenKey | keyof ManualParams]: S extends keyof ManualParams
     ? ManualParams[S]
     : NormalizeEmpty<ExtractRouteParams<LinkingPath<S>>>;
 };

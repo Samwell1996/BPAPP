@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import {
+  // eslint-disable-next-line no-restricted-imports
   useNavigation as useNavigationV5,
   useIsFocused as useIsFocusedV5,
   NavigationProp,
@@ -9,12 +10,39 @@ import { InteractionManager } from 'react-native';
 import { preload } from 'react-native-bundle-splitter';
 
 import type { RootStackParamList } from '@navigation/types';
+import { RouteObjectContext } from '@navigation/withScreen/RouteObject';
+import { useRouteParamsSelector } from '@navigation/withScreen/RouteParams';
 import refs from '@services/navigationRefs';
-import { RouteObjectContext } from 'src/navigation/withScreen/RouteObject';
-import { useRouteParamsSelector } from 'src/navigation/withScreen/RouteParams';
 
-type NavigateFn = NavigationProp<RootStackParamList>['navigate'];
+type NavigateFn = <T extends keyof RootStackParamList>(
+  screen: T,
+  params?: RootStackParamList[T],
+) => void;
 
+/**
+ * useNavigation
+ *
+ * A wrapper around useNavigation that provides a custom, strongly-typed `navigate` function.
+ *
+ * 🚨 To use navigation with screen params, you must explicitly define them in `ManualParams`.
+ *
+ * @example src/constants/navigation
+ *
+ * type ManualParams = {
+ *   [SCREEN_NAMES.EXPLORE]: { itemId: string };
+ *   [SCREEN_NAMES.SETTINGS]: { userId: string }; // <-- Add new screens here
+ * };
+ *
+ * @example
+ * const { navigate } = useNavigation();
+ * navigate(SCREEN_NAMES.EXPLORE, { itemId: '123' }); // ✅ Fully typed
+ *
+ * @error
+ * If a screen is not listed in `ManualParams`, TypeScript will raise an error like:
+ * Argument of type '"SETTINGS"' is not assignable to parameter of type ...
+ *
+ * This ensures all navigation routes with parameters are explicitly defined and type-safe.
+ */
 export const useNavigation = () => {
   const navigation = useNavigationV5<NavigationProp<RootStackParamList>>();
 
@@ -62,13 +90,12 @@ export const usePreload = (screenNames: string[]) => {
     return () => {
       interactionPromise?.cancel();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 
 export const useFocusedValue = (value: any) => {
   const isFocused = useIsFocused();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   const snapshot = useMemo(() => value, [isFocused]);
 
   return isFocused ? value : snapshot;
