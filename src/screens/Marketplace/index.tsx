@@ -9,7 +9,7 @@ const Marketplace = () => {
   const { navigate } = useNavigation();
 
   useEffect(() => {
-    navigate(SCREEN_NAMES.EXPLORE);
+    navigate(SCREEN_NAMES.EXPLORE, { itemId: 'id' });
   }, []);
 
   return <View style={{ backgroundColor: 'blue', flex: 1 }} />;

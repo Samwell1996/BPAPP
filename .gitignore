@@ -22,6 +22,12 @@ DerivedData
 *.xcuserstate
 **/.xcode.env.local
 
+# Font icons
+/src/assets/Icons.ttf
+/ios/Icons.ttf
+/android/app/src/main/assets/fonts/Icons.ttf
+/assets/fonts/Icons.ttf
+
 # Android/IntelliJ
 #
 build/
