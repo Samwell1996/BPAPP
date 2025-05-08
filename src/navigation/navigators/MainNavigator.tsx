@@ -40,6 +40,7 @@ const mainStackScreenOptions: NativeStackNavigationOptions = {
   fullScreenGestureEnabled: true,
   animation: IS_IOS ? 'default' : 'fade',
   presentation: IS_IOS ? 'modal' : 'transparentModal',
+  contentStyle: { backgroundColor: 'transparent' },
 };
 
 const MainNavigator = () => {
