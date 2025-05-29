@@ -1,7 +1,7 @@
-const EN = () => ({
+const EN = {
   profile: {
     title: 'Profile',
   },
-});
+};
 
 export default EN;
