@@ -12,8 +12,11 @@ export interface IRootStore {
     viewer: ViewerStore;
     auth: AuthStore;
   };
-  removeAllListeners(): void;
 }
+
+type RootStoreDeps = {
+  api: typeof Api;
+};
 
 export class RootStore implements IRootStore {
   auth: AuthStore;
@@ -23,7 +26,7 @@ export class RootStore implements IRootStore {
 
   isInitialized = false;
 
-  constructor() {
+  constructor(private deps: RootStoreDeps) {
     this.auth = new AuthStore(this);
     this.viewer = new ViewerStore(this);
 
@@ -42,21 +45,11 @@ export class RootStore implements IRootStore {
     auth: this.auth,
   });
 
-  get services() {
-    return {};
-  }
-
   get api() {
-    return Api;
+    return this.deps.api;
   }
 
   setInitialized(value: boolean) {
     this.isInitialized = value;
-  }
-
-  removeAllListeners() {
-    /**
-     * Remove all listeners
-     */
   }
 }

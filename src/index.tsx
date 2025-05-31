@@ -4,7 +4,7 @@ import { startNetworkLogging } from 'react-native-network-logger';
 import NavigationContainer from '@navigation/index';
 import { AppStateProvider } from '@services/appState';
 import reactotron from '@services/reactotron';
-import { StoresContext } from '@stores/hooks/useStores';
+import { StoreProvider } from '@stores/hooks/useStores';
 import { stores } from '@stores/index';
 import { ThemeProvider } from '@styles/theme';
 
@@ -18,9 +18,9 @@ if (__DEV__) {
 const App = () => (
   <AppStateProvider>
     <ThemeProvider>
-      <StoresContext.Provider value={stores}>
+      <StoreProvider value={stores}>
         <NavigationContainer />
-      </StoresContext.Provider>
+      </StoreProvider>
     </ThemeProvider>
   </AppStateProvider>
 );

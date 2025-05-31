@@ -1,5 +1,5 @@
-import { RootStore } from './root';
+import { createRootStore } from './creator';
+
+export const stores = createRootStore();
 
 export { RootStore } from './root';
-
-export const stores = new RootStore();
