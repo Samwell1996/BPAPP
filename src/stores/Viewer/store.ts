@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
-import { withDuck } from './helpers/duck';
-import type { RootStore } from './root';
+import { withDuck } from '../helpers/duck';
+import type { RootStore } from '../root';
 
 export interface IUser {
   id: string;

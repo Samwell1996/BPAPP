@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
 import { VIEWERS } from '@stores/schemas';
-import { IUser } from '@stores/viewer';
+import { IUser } from '@stores/Viewer/store';
 import { uuidv4 } from '@utils/string';
 
 import { UserModel } from './model';

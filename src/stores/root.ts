@@ -2,10 +2,10 @@ import { makeAutoObservable } from 'mobx';
 
 import { Api } from '@api';
 
-import { AuthStore } from './auth';
+import { AuthStore } from './Auth/store';
 import { EntitiesStore } from './helpers/entities';
 import { PersistConfig, PersistService } from './helpers/persist';
-import { ViewerStore } from './viewer';
+import { ViewerStore } from './Viewer/store';
 import { ViewersStore } from './Viewers/store';
 
 export interface IRootStore {

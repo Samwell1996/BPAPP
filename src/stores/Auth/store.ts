@@ -2,8 +2,8 @@ import { makeAutoObservable } from 'mobx';
 
 import { uuidv4 } from '@utils/string';
 
-import { withDuck } from './helpers/duck';
-import type { RootStore } from './root';
+import { withDuck } from '../helpers/duck';
+import type { RootStore } from '../root';
 
 export class AuthStore {
   constructor(private root: RootStore) {
