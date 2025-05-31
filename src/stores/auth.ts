@@ -10,7 +10,7 @@ export class AuthStore {
     makeAutoObservable(this);
   }
 
-  login = withDuck(async () => {
+  login = withDuck<[], void>(async _signal => {
     const user = {
       id: uuidv4(),
       name: 'Guest',
@@ -20,7 +20,7 @@ export class AuthStore {
     this.root.viewer.setIsLoggedIn.run(true);
   });
 
-  logout = withDuck(async () => {
+  logout = withDuck<[], void>(async _signal => {
     this.root.viewer.setIsLoggedIn.run(false);
     this.root.viewer.setUser.run(null);
   });

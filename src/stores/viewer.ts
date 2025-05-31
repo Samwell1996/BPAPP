@@ -7,6 +7,7 @@ export interface IUser {
   id: string;
   name: string;
 }
+
 export class ViewerStore {
   isLoggedIn = false;
   user: IUser | null = null;
@@ -19,15 +20,11 @@ export class ViewerStore {
     return this.isLoggedIn;
   }
 
-  setUser = withDuck(async user => {
-    try {
-      this.user = user;
-    } catch {
-      this.user = null;
-    }
+  setUser = withDuck<[IUser | null], void>(async (user, _signal) => {
+    this.user = user;
   });
 
-  setIsLoggedIn = withDuck(async isLoggedIn => {
+  setIsLoggedIn = withDuck<[boolean], void>(async (isLoggedIn, _signal) => {
     this.isLoggedIn = isLoggedIn;
   });
 }
