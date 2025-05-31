@@ -3,6 +3,7 @@ import { startNetworkLogging } from 'react-native-network-logger';
 import NavigationContainer from '@navigation/index';
 import { AppStateProvider } from '@services/appState';
 import reactotron from '@services/reactotron';
+import { ThemeProvider } from '@styles/theme';
 
 if (__DEV__) {
   reactotron();
@@ -13,7 +14,9 @@ if (__DEV__) {
 //TODO:: add portal for modals in fade in modal ?
 const App = () => (
   <AppStateProvider>
-    <NavigationContainer />
+    <ThemeProvider>
+      <NavigationContainer />
+    </ThemeProvider>
   </AppStateProvider>
 );
 

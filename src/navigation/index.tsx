@@ -1,6 +1,10 @@
 import { ReactNode } from 'react';
 
-import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  LinkingOptions,
+  DefaultTheme,
+} from '@react-navigation/native';
 
 import { LINKING } from '@constants/linking';
 import MainStack from '@navigation/navigators/MainNavigator';
@@ -24,6 +28,7 @@ const NavigationContainerWrapper = ({
   children,
 }: NavigationContainerWrapperProps) => (
   <NavigationContainer
+    theme={DefaultTheme}
     linking={linking}
     ref={setTopLevelNavigator}
     onReady={registerNavigationContainer}
