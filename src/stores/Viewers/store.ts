@@ -1,8 +1,11 @@
 import { makeAutoObservable } from 'mobx';
 
+import { VIEWERS } from '@stores/schemas';
 import { IUser } from '@stores/viewer';
 import { uuidv4 } from '@utils/string';
 
+import { UserModel } from './model';
+import { ListStore } from '../helpers/createList';
 import { withDuck } from '../helpers/duck';
 import type { RootStore } from '../root';
 
@@ -23,7 +26,14 @@ const randomName = () => {
 };
 
 export class ViewersStore {
+  list: ListStore<UserModel>;
+
   constructor(private root: RootStore) {
+    this.list = new ListStore<UserModel>({
+      entityKey: VIEWERS,
+      root,
+    });
+
     makeAutoObservable(this);
   }
 
@@ -33,6 +43,6 @@ export class ViewersStore {
       name: randomName(),
     }));
 
-    this.root.viewersList.set(users);
+    this.list.set(users);
   });
 }
