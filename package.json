@@ -37,8 +37,7 @@
     "react-native-screens": "^4.10.0",
     "react-native-theme-mk": "^0.2.0",
     "reactotron-core-client": "^2.9.7",
-    "reactotron-react-native": "^5.1.13",
-    "uuid": "^11.1.0"
+    "reactotron-react-native": "^5.1.13"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

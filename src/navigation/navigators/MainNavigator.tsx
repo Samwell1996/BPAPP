@@ -12,7 +12,7 @@ import {
 } from '@navigation/options/navigatorOptions';
 import { getScreenOptions } from '@navigation/options/screenOptions';
 import { SCREENS } from '@navigation/screens';
-import { stores } from '@stores/index';
+import { useStores } from '@stores/hooks/useStores';
 
 import TabNavigator from './TabNavigator';
 import UnAuthorizedNavigator from './UnAuthorizedNavigator';
@@ -24,7 +24,9 @@ const modalsEntries = createScreenEntries(MODALS);
 const screenEntries = createScreenEntries(SCREENS);
 
 const MainNavigator = observer(() => {
-  const isLoggedIn = stores.getStores().viewer.isLoggedIn;
+  const {
+    viewer: { isLoggedIn },
+  } = useStores();
 
   return (
     <NativeStack.Navigator

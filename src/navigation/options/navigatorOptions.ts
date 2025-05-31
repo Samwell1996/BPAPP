@@ -7,7 +7,6 @@ export const screenStackScreenOptions: NativeStackNavigationOptions = {
   animation: 'slide_from_right',
   contentStyle: {
     paddingTop: Device.inset.top,
-    paddingBottom: Device.inset.bottom,
   },
 };
 
@@ -15,6 +14,9 @@ export const screenStackUnAuthorizedScreenOptions: NativeStackNavigationOptions 
   {
     headerShown: false,
     animation: 'slide_from_right',
+    contentStyle: {
+      paddingBottom: Device.inset.bottom,
+    },
   };
 
 export const mainStackScreenOptions: NativeStackNavigationOptions = {

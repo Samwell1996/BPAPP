@@ -1,5 +1,26 @@
-import { View } from 'react-native';
+import { useCallback } from 'react';
 
-const Profile = () => <View style={{ backgroundColor: 'orange', flex: 1 }} />;
+import { observer } from 'mobx-react-lite';
 
-export default Profile;
+import { useStores } from '@stores/hooks/useStores';
+
+import Profile from './Profile';
+
+const ProfileContainer = () => {
+  const {
+    auth: { logout },
+  } = useStores();
+
+  const onLogout = useCallback(() => {
+    logout.run();
+  }, []);
+
+  const props = {
+    onLogout,
+    isLoading: logout.isLoading,
+  };
+
+  return <Profile {...props} />;
+};
+
+export default observer(ProfileContainer);

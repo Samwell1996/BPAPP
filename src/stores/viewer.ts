@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx';
-import { v4 as uuidv4 } from 'uuid';
+
+import { withDuck } from './helpers/duck';
+import type { RootStore } from './root';
 
 export interface IUser {
   id: string;
@@ -9,30 +11,23 @@ export class ViewerStore {
   isLoggedIn = false;
   user: IUser | null = null;
 
-  constructor() {
+  constructor(private root: RootStore) {
     makeAutoObservable(this);
   }
 
-  async login() {
+  get isLoadingIn() {
+    return this.isLoggedIn;
+  }
+
+  setUser = withDuck(async user => {
     try {
-      this.user = {
-        id: uuidv4(),
-        name: 'Guest',
-      };
-
-      this.isLoggedIn = true;
-    } catch (e) {
+      this.user = user;
+    } catch {
       this.user = null;
-      this.isLoggedIn = false;
-
-      throw e;
     }
-  }
+  });
 
-  logout() {
-    this.user = null;
-    this.isLoggedIn = false;
-  }
+  setIsLoggedIn = withDuck(async isLoggedIn => {
+    this.isLoggedIn = isLoggedIn;
+  });
 }
-
-export const viewerStore = new ViewerStore();

@@ -4,7 +4,7 @@ export const useStyles = ThemeManager.createStyleSheet(({ theme }) => ({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'red',
+    backgroundColor: 'orange',
   },
   button: {
     backgroundColor: theme.colors.white,

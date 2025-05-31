@@ -1,16 +1,26 @@
 import { useCallback } from 'react';
 
+import { observer } from 'mobx-react-lite';
+
+import { useStores } from '@stores/hooks/useStores';
+
 import Login from './Login';
 
 const LoginContainer = () => {
-  const onLogin = useCallback(() => {}, []);
+  const {
+    auth: { login },
+  } = useStores();
+
+  const onLogin = useCallback(() => {
+    login.run();
+  }, []);
 
   const props = {
     onLogin,
-    isLoading: false,
+    isLoading: login.isLoading,
   };
 
   return <Login {...props} />;
 };
 
-export default LoginContainer;
+export default observer(LoginContainer);
