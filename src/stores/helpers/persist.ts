@@ -7,9 +7,9 @@ export interface PersistConfig {
   [storeKey: string]: string[];
 }
 
-export class PersistService {
+export class PersistService<TStore extends Record<string, any>> {
   constructor(
-    private store: any,
+    private store: TStore,
     private config: PersistConfig,
   ) {}
 
