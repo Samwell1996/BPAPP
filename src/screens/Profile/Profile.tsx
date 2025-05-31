@@ -4,10 +4,11 @@ import { useStyles } from './styles';
 
 interface ProfileProps {
   onLogout: () => void;
+  addUsers: () => void;
   isLoading: boolean;
 }
 
-const Profile = ({ onLogout, isLoading }: ProfileProps) => {
+const Profile = ({ onLogout, addUsers, isLoading }: ProfileProps) => {
   const styles = useStyles();
 
   return (
@@ -17,6 +18,14 @@ const Profile = ({ onLogout, isLoading }: ProfileProps) => {
           <ActivityIndicator />
         ) : (
           <Text style={styles.textButton}>Logout Button</Text>
+        )}
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={addUsers}>
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Text style={styles.textButton}>Add Users Button</Text>
         )}
       </TouchableOpacity>
     </View>

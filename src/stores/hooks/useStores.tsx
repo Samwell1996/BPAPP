@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { createRootStore } from '../creator';
+import { createRootStore } from '../helpers/creator';
 import { RootStore } from '../root';
 
 const defaultStore = createRootStore();

@@ -11,6 +11,7 @@ export const useStyles = ThemeManager.createStyleSheet(({ theme }) => ({
     marginHorizontal: 16,
     ...theme.element.center,
     ...theme.element.button,
+    marginVertical: theme.spacing.XS,
   },
   textButton: {
     ...theme.text.label,

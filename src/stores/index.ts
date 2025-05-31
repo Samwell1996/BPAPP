@@ -1,4 +1,4 @@
-import { createRootStore } from './creator';
+import { createRootStore } from './helpers/creator';
 
 export const stores = createRootStore();
 

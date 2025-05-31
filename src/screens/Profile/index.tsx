@@ -9,14 +9,20 @@ import Profile from './Profile';
 const ProfileContainer = () => {
   const {
     auth: { logout },
+    viewers: { fetchUsers },
   } = useStores();
 
   const onLogout = useCallback(() => {
     logout.run();
   }, []);
 
+  const addUsers = useCallback(() => {
+    fetchUsers.run();
+  }, []);
+
   const props = {
     onLogout,
+    addUsers,
     isLoading: logout.isLoading,
   };
 
