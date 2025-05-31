@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import { SCREEN_NAMES } from '@constants/navigation';
 import { SCREENS_TAB } from '@navigation/screens';
 import { ScreenKey } from '@navigation/types';
+import { Device } from '@services/device';
 
 import { createScreenEntries } from './utils';
 
@@ -19,7 +20,7 @@ const ScreenIcon = ({ focused, name }: { focused: boolean; name: string }) => {
   const icons: Record<string, React.ReactElement> = {
     [SCREEN_NAMES.EXPLORE]: (
       <View>
-        <Text>{focused ? 'Focused' : 'Not Focused'}</Text>
+        <Text>{focused ? 'F' : ''}</Text>
       </View>
     ),
     [SCREEN_NAMES.MARKETPLACE]: <View />,
@@ -33,7 +34,7 @@ const tabBarOptions = {
   headerTitle: '',
   tabBarAllowFontScaling: false,
   safeAreaInsets: {
-    bottom: 56, //TODO:: add from safe-area
+    bottom: Device.inset.bottom,
   },
   tabBarStyle: {},
 };

@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite';
 import { startNetworkLogging } from 'react-native-network-logger';
 
 import NavigationContainer from '@navigation/index';
@@ -20,4 +21,4 @@ const App = () => (
   </AppStateProvider>
 );
 
-export default App;
+export default observer(App);

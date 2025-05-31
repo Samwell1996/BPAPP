@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { AppState } from 'react-native';
 
 import { APP_STATES } from '@constants/appState';
-import { IS_ANDROID, IS_IOS } from '@constants/device';
 import { usePrevious } from '@hooks/common';
 import { useAppState } from '@services/appState';
+import { useDevice } from '@styles/theme';
 
 type Callback = () => void;
 
@@ -55,12 +55,13 @@ export const useAppBackgrounded = (callback: Callback) => {
 export const useAppInactive = (callback: Callback) => {
   const appState = useAppState();
   const prevAppState = usePrevious(appState);
+  const device = useDevice();
 
   useEffect(() => {
     if (
       prevAppState === APP_STATES.ACTIVE &&
       appState === APP_STATES.INACTIVE &&
-      IS_IOS
+      device.isIOS
     ) {
       callback();
     }
@@ -68,7 +69,7 @@ export const useAppInactive = (callback: Callback) => {
     if (
       prevAppState === APP_STATES.ACTIVE &&
       appState === APP_STATES.BACKGROUND &&
-      IS_ANDROID
+      device.isAndroid
     ) {
       callback();
     }

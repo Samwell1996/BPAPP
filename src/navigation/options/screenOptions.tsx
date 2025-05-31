@@ -1,9 +1,9 @@
 import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import { SCREEN_NAMES } from '@constants/navigation';
-import type { ScreenKey } from '@navigation/types';
+import type { AppScreenKey } from '@navigation/types';
 
-const defaultScreenOptions = {
+const defaultScreenOptions: NativeStackNavigationOptions = {
   headerShown: true,
   gestureEnabled: true,
   fullScreenGestureEnabled: true,
@@ -12,7 +12,7 @@ const defaultScreenOptions = {
 };
 
 const specificScreenOptions: Partial<
-  Record<ScreenKey, Partial<NativeStackNavigationOptions>>
+  Record<AppScreenKey, Partial<NativeStackNavigationOptions>>
 > = {
   [SCREEN_NAMES.SETTINGS]: {
     headerShown: false,
@@ -21,7 +21,7 @@ const specificScreenOptions: Partial<
 };
 
 export const getScreenOptions = (
-  name: ScreenKey,
+  name: AppScreenKey,
 ): NativeStackNavigationOptions => ({
   ...defaultScreenOptions,
   ...specificScreenOptions[name],

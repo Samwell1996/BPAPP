@@ -1,21 +1,19 @@
 import { memo } from 'react';
 
-import {
-  createNativeStackNavigator,
-  NativeStackNavigationOptions,
-} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { observer } from 'mobx-react-lite';
 
-import { IS_IOS } from '@constants/device';
-import {
-  NAVIGATOR_NAMES,
-  GESTURE_DISABLED_MODALS,
-} from '@constants/navigation';
+import { NAVIGATOR_NAMES } from '@constants/navigation';
 import { MODALS } from '@navigation/modals';
+import { getDefaultModalOptions } from '@navigation/options/modalOptions';
+import {
+  screenStackScreenOptions,
+  mainStackScreenOptions,
+} from '@navigation/options/navigatorOptions';
+import { getScreenOptions } from '@navigation/options/screenOptions';
 import { SCREENS } from '@navigation/screens';
+import { stores } from '@stores/index';
 
-import { screenStackScreenOptions } from '../stackOptions';
-import { ModalKey } from '../types';
-import { getScreenOptions } from './options';
 import TabNavigator from './TabNavigator';
 import UnAuthorizedNavigator from './UnAuthorizedNavigator';
 import { createScreenEntries } from './utils';
@@ -25,27 +23,8 @@ const NativeStack = createNativeStackNavigator();
 const modalsEntries = createScreenEntries(MODALS);
 const screenEntries = createScreenEntries(SCREENS);
 
-const getDefaultModalOptions = (
-  screen: ModalKey,
-): NativeStackNavigationOptions => ({
-  gestureEnabled: !GESTURE_DISABLED_MODALS[screen],
-  presentation: IS_IOS ? 'modal' : 'transparentModal',
-  animation: IS_IOS ? 'slide_from_bottom' : 'fade',
-  headerShown: false,
-});
-
-const mainStackScreenOptions: NativeStackNavigationOptions = {
-  headerShown: false,
-  gestureEnabled: true,
-  fullScreenGestureEnabled: true,
-  animation: IS_IOS ? 'default' : 'fade',
-  presentation: IS_IOS ? 'modal' : 'transparentModal',
-  contentStyle: { backgroundColor: 'transparent' },
-};
-
-const MainNavigator = () => {
-  //TODO:: from store should be
-  const isLoggedIn = true;
+const MainNavigator = observer(() => {
+  const isLoggedIn = stores.getStores().viewer.isLoggedIn;
 
   return (
     <NativeStack.Navigator
@@ -79,9 +58,9 @@ const MainNavigator = () => {
       )}
     </NativeStack.Navigator>
   );
-};
+});
 
-const MainStack = () => (
+const MainStack = observer(() => (
   <NativeStack.Navigator screenOptions={mainStackScreenOptions}>
     <NativeStack.Screen
       name={NAVIGATOR_NAMES.MAIN_NAVIGATOR}
@@ -96,6 +75,6 @@ const MainStack = () => (
       />
     ))}
   </NativeStack.Navigator>
-);
+));
 
 export default memo(MainStack);

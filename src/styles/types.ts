@@ -66,7 +66,7 @@ export interface IBaseThemeSchema {
   >;
 }
 export type ITextStyle = Record<ITextStyleType, IThemeTextStyle>;
-export type IElementStyle = Record<'header', IStyle>;
+export type IElementStyle = Record<'header' | 'button', IStyle>;
 export type IPaletteStyle = Record<IPalette, string>;
 export type IShadowStyle = Record<'light' | 'none', IShadow>;
 

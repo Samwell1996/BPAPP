@@ -33,6 +33,7 @@ const plugins = [
     '@styles': './src/styles',
     '@utils': './src/utils',
     '@helper': './src/helper',
+    '@config': './src/config'
    },
   },
  ],

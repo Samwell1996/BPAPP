@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { BackHandler, NativeEventSubscription } from 'react-native';
-
-import { IS_ANDROID } from '@constants/device';
+import { BackHandler, NativeEventSubscription, Platform } from 'react-native';
 
 type BackHandlerCallback = (event?: unknown) => void;
 
@@ -67,4 +65,5 @@ export const useBackHandlerAndroid = (handler: BackHandlerCallback): void => {
  *   ]);
  * });
  */
-export const useBackHandler = IS_ANDROID ? useBackHandlerAndroid : () => {};
+export const useBackHandler =
+  Platform.OS === 'android' ? useBackHandlerAndroid : () => {};

@@ -16,7 +16,8 @@
       "@stores/*": ["./src/stores/*"],
       "@styles/*": ["./src/styles/*"],
       "@utils/*": ["./src/utils/*"],
-      "@helper/*": ["./src/helper/*"]
+      "@helper/*": ["./src/helper/*"],
+      "@config/*": ["./src/config/*"]
     }
   }
 }
