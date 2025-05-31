@@ -7,4 +7,8 @@ export const createElementsStyles = (): IElementStyle => ({
   button: {
     height: 48,
   },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
