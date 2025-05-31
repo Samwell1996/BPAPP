@@ -12,48 +12,57 @@ type DuckFlowState<TArgs extends any[], TResult> = {
   error: Error | null;
   data: TResult | null;
   run: (...args: TArgs) => Promise<TResult>;
+  reset: () => void;
 };
+
+const TIMEOUT_MS = 30000;
 
 /**
  * Creates a reactive MobX-powered async flow with built-in state:
- * - `isLoading`: indicates loading state
- * - `error`: stores the error if one occurs
- * - `data`: stores the result of the async function
+ * - `isLoading`: true while the async function is running
+ * - `error`: contains an Error if one occurs
+ * - `data`: contains the result on success
+ * - `reset()`: resets all internal state
  *
- * It supports:
- * - optional AbortSignal injection (for cancellation)
- * - automatic timeout rejection (default: 30 seconds)
- * - optional side-effect handlers (`onSuccess`, `onError`)
+ * Supports:
+ * - optional AbortSignal for request cancellation
+ * - timeout (auto-abort) with fallback to 30s
+ * - side-effect handlers: `onSuccess`, `onError`
  *
- * ### Usage:
- * ```ts
- * const fetchData = withDuck<[string], User>(async (url, signal) => {
- *   const res = await fetch(url, { signal });
- *   return await res.json();
- * }, {
- *   timeoutMs: 10000, // optional
- *   onSuccess: (user) => console.log('Loaded user:', user),
- *   onError: (err) => console.warn('Failed to load', err),
- * });
+ * ---
+ * @template TArgs Arguments passed to the async function.
+ * @template TResult Return type of the async function.
  *
- * await fetchData.run('https://api.example.com/user');
- * ```
+ * @param asyncFn The async function to wrap. Must accept optional AbortSignal as last argument.
+ * @param options Optional config:
+ *   - `timeoutMs`: how long to wait before auto-abort (default 30_000 ms)
+ *   - `getAbortSignal`: inject external AbortSignal
+ *   - `onSuccess`: called on success with result
+ *   - `onError`: called on failure with error
  *
- * @template TArgs - Arguments passed to the async function.
- * @template TResult - Expected return type of the async function.
- *
- * @param asyncFn - An async function with optional AbortSignal as last parameter.
- * @param options - Optional config:
- *   - `timeoutMs`: auto-reject if execution time exceeds this limit (default 30s)
- *   - `onSuccess`: called with result on success
- *   - `onError`: called with error on failure
- *   - `getAbortSignal`: allows passing a custom AbortSignal (optional)
- *
- * @returns An object with:
- *   - `run(...args)`: to trigger the async function
- *   - `isLoading`: boolean
- *   - `error`: Error | null
+ * @returns DuckFlowState:
+ *   - `run(...args)`: triggers asyncFn
+ *   - `isLoading`: true if running
  *   - `data`: TResult | null
+ *   - `error`: Error | null
+ *   - `reset()`: clears state
+ *
+ * ---
+ * @example
+ * const userFetcher = withDuck<[string], User>(
+ *   async (url, signal) => {
+ *     const res = await fetch(url, { signal });
+ *     if (!res.ok) throw new Error('Request failed');
+ *     return await res.json();
+ *   },
+ *   {
+ *     timeoutMs: 10000,
+ *     onSuccess: (user) => console.log('Loaded:', user),
+ *     onError: (err) => console.warn('Failed:', err),
+ *   }
+ * );
+ *
+ * await userFetcher.run('https://api.example.com/user');
  */
 
 export function withDuck<TArgs extends any[], TResult>(
@@ -72,17 +81,14 @@ export function withDuck<TArgs extends any[], TResult>(
       });
 
       const startTime = Date.now();
-      const timeout = options.timeoutMs ?? 30_000;
-
-      const abortSignal =
-        options.getAbortSignal?.() ?? new AbortController().signal;
+      const timeoutMs = options.timeoutMs || TIMEOUT_MS;
+      const abortSignal = options.getAbortSignal?.();
 
       try {
         const result = await asyncFn(...args, abortSignal);
-
         const duration = Date.now() - startTime;
 
-        if (duration > timeout) {
+        if (timeoutMs && duration > timeoutMs) {
           const timeoutError = new Error(
             'withDuck: operation exceeded timeout',
           );
@@ -90,7 +96,7 @@ export function withDuck<TArgs extends any[], TResult>(
             state.error = timeoutError;
           });
           options.onError?.(timeoutError);
-          return Promise.reject(timeoutError);
+          throw timeoutError;
         }
 
         runInAction(() => {
@@ -100,17 +106,25 @@ export function withDuck<TArgs extends any[], TResult>(
         options.onSuccess?.(result);
         return result;
       } catch (err) {
+        const error = err instanceof Error ? err : new Error('Unknown error');
         runInAction(() => {
-          state.error = err as Error;
+          state.error = error;
         });
-
-        options.onError?.(err);
-        throw err;
+        options.onError?.(error);
+        throw error;
       } finally {
         runInAction(() => {
           state.isLoading = false;
         });
       }
+    },
+
+    reset() {
+      runInAction(() => {
+        state.data = null;
+        state.error = null;
+        state.isLoading = false;
+      });
     },
   };
 

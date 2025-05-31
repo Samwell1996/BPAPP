@@ -22,7 +22,7 @@ export class RootStore implements IRootStore {
   auth: AuthStore;
   viewer: ViewerStore;
 
-  private persist: PersistService;
+  private persist: PersistService<RootStore>;
 
   isInitialized = false;
 
