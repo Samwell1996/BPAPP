@@ -8,10 +8,6 @@ import { ViewerStore } from './viewer';
 
 export interface IRootStore {
   isInitialized: boolean;
-  getStores(): {
-    viewer: ViewerStore;
-    auth: AuthStore;
-  };
 }
 
 type RootStoreDeps = {
@@ -39,11 +35,6 @@ export class RootStore implements IRootStore {
     this.persist = new PersistService(this, persistConfig);
     this.persist.init();
   }
-
-  getStores = () => ({
-    viewer: this.viewer,
-    auth: this.auth,
-  });
 
   get api() {
     return this.deps.api;
