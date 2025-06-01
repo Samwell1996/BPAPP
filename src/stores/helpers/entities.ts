@@ -4,7 +4,9 @@ export class EntitiesStore {
   [key: string]: any;
 
   constructor(private persistFn?: (key: string) => void) {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {
+      persistFn: false,
+    });
   }
 
   merge(newEntities: Record<string, Record<string | number, any>>) {

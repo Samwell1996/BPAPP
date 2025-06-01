@@ -31,6 +31,13 @@ export class RootStore implements IRootStore {
   isInitialized = false;
 
   constructor(private deps: RootStoreDeps) {
+    const persistConfig: PersistConfig = {
+      viewer: ['user', 'isLoggedIn'],
+      entities: ['posts'],
+      posts: ['list'],
+    };
+
+    this.persist = new PersistService(this, persistConfig);
     this.entities = new EntitiesStore(key =>
       this.persist.persistEntitiesKey(key),
     );
@@ -40,15 +47,10 @@ export class RootStore implements IRootStore {
     this.viewers = new ViewersStore(this);
     this.posts = new PostsStore(this);
 
-    makeAutoObservable(this);
+    makeAutoObservable(this, {
+      persist: false,
+    });
 
-    const persistConfig: PersistConfig = {
-      viewer: ['user', 'isLoggedIn'],
-      entities: ['posts'],
-      posts: ['list'],
-    };
-
-    this.persist = new PersistService(this, persistConfig);
     this.persist.init();
   }
 

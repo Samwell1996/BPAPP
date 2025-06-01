@@ -46,9 +46,6 @@ export class PersistService<TStore extends Record<string, any>> {
           typeof target.getSnapshot === 'function' &&
           typeof target.restoreFromSnapshot === 'function';
 
-        const getValue = () =>
-          toJS(isSnapshotable ? target.getSnapshot() : target);
-
         const stored = storage.getString(storageKey);
         if (stored) {
           try {
@@ -61,14 +58,31 @@ export class PersistService<TStore extends Record<string, any>> {
           }
         }
 
-        reaction(getValue, value => {
-          try {
-            const json = JSON.stringify(value);
-            storage.set(storageKey, json);
-          } catch (err) {
-            console.warn(`Persist failed for ${storageKey}`, err);
-          }
-        });
+        if (isSnapshotable) {
+          reaction(
+            () => toJS(target.getSnapshot()),
+            value => {
+              try {
+                const json = JSON.stringify(value);
+                storage.set(storageKey, json);
+              } catch (err) {
+                console.warn(`Persist failed for ${storageKey}`, err);
+              }
+            },
+          );
+        } else {
+          reaction(
+            () => storeInstance[key],
+            value => {
+              try {
+                const json = JSON.stringify(value);
+                storage.set(storageKey, json);
+              } catch (err) {
+                console.warn(`Persist failed for ${storageKey}`, err);
+              }
+            },
+          );
+        }
       }
     }
   }
