@@ -79,12 +79,6 @@ Jest is configured. Test files live under `__tests__/` in relevant modules.
 
 ---
 
-## 📄 Notes
-
-- Deep linking is supported (via `constants/linking.ts`)
-- App state is handled through `appState.ts` and shared hooks
-- Firebase SDK not required in client — optional for backend integration
-
 ### 🧠 Architecture Decisions
 
 - **State Management: MobX**
