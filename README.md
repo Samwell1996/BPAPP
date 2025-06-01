@@ -1,97 +1,117 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# BPAPP — React Native Application
 
-# Getting Started
+## 📱 Overview
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+This is a modular and scalable React Native application developed using TypeScript, MobX, and React Navigation. The architecture follows clean separation of concerns: navigation, screens, stores, and services are well-isolated and organized.
 
-## Step 1: Start Metro
+---
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 🚀 Features
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- **TypeScript** for type safety
+- **MobX** for state management (with modular stores)
+- **React Navigation** with modular navigators
+- **Modular screen architecture** (Post, Explore, Profile, Login, etc.)
+- **Theming system** (`primaryTheme`, `text`, `palette`)
+- **Localization support** (`localization/en.ts`)
+- **Offline-ready storage** using `MMKV`
+- **API layer** with typed endpoints (`api/posts`, `api/auth`, etc.)
+- **Custom hooks**, utility functions, and `reactotron` integration
 
-```sh
-# Using npm
-npm start
+---
 
-# OR using Yarn
-yarn start
+## 📁 Folder Structure
+
+- `src/screens` — main UI screens of the application
+- `src/stores` — MobX stores with helpers and models
+- `src/navigation` — navigation setup with modals, stacks, and deep linking
+- `src/components` — reusable UI components (`atoms`, `molecules`, `organizm`)
+- `src/api` — API request modules with TypeScript types
+- `src/styles` — theme, palette, and design tokens
+- `src/services` — integrations like Reactotron, Sentry, etc.
+- `src/hooks` — shared logic (`useNavigationParam`, `useAppState`, etc.)
+- `src/constants` — static config for navigation, linking, and state
+
+---
+
+## 📦 Dependencies
+
+- `react-native`
+- `react`
+- `mobx`, `mobx-react-lite`
+- `@react-navigation/*`
+- `react-native-mmkv`
+- `axios`
+- `react-native-config`
+- `react-native-safe-area-context`
+
+Dev tools include: Jest, ESLint, Prettier, Husky, patch-package
+
+---
+
+## 🛠️ Getting Started
+
+### 1. Install dependencies
+
+```bash
+yarn install
 ```
 
-## Step 2: Build and run your app
+### 2. Run app
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
+```bash
+yarn ios
+# or
 yarn android
 ```
 
-### iOS
+### 3. Useful scripts
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+- `yarn startc` — start Metro with cache reset
+- `yarn lint:fix` — lint and auto-fix code
+- `yarn test` — run unit tests
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+---
 
-```sh
-bundle install
-```
+## 🧪 Testing
 
-Then, and every time you update your native dependencies, run:
+Jest is configured. Test files live under `__tests__/` in relevant modules.
 
-```sh
-bundle exec pod install
-```
+---
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## 📄 Notes
 
-```sh
-# Using npm
-npm run ios
+- Deep linking is supported (via `constants/linking.ts`)
+- App state is handled through `appState.ts` and shared hooks
+- Firebase SDK not required in client — optional for backend integration
 
-# OR using Yarn
-yarn ios
-```
+### 🧠 Architecture Decisions
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+- **State Management: MobX**
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+  - All business logic is isolated within stores.
+  - `duckFlow` — a utility for async actions with built-in states (`isLoading`, `error`, `data`). It’s our lightweight equivalent of useMutation/useQuery.
+  - `ListStore` — abstraction for managing collections that:
+    - stores only arrays of IDs,
+    - uses normalized entity storage,
+    - supports replace, append, remove, findById operations,
+    - supports pagination (via `fetchMore`).
+  - Each store can independently declare which fields to persist via `PersistService` — a flexible system backed by MMKV.
 
-## Step 3: Modify your app
+- **Normalized Entities**
 
-Now that you have successfully run the app, let's make changes!
+  - Entities (e.g., `PostModel`) are stored centrally in `EntityStore`, accessed via `getEntityById`.
+  - This enables updating data in one place and auto-updating all components that use them.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+- **Dependency Injection**
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+  - All stores are initialized via a central `RootStore`, enabling easy access to dependencies and mocking in tests.
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+- **useStores Hook**
 
-## Congratulations! :tada:
+  - Provides convenient destructuring to access any store inside a component:
+    ```tsx
+    const { posts, viewer } = useStores();
+    ```
 
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- **UI Components are decoupled from stores** — logic is extracted out of UI, making testing, scaling, and reusability easier.
