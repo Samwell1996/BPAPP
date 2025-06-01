@@ -2,11 +2,17 @@ import { useCallback, useEffect } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
+import { SCREEN_NAMES } from '@constants/navigation';
+import { usePreload } from '@hooks/navigation';
 import { useStores } from '@stores/hooks/useStores';
 
 import Explore from './Explore';
 
+const preloadComponents = [SCREEN_NAMES.POST];
+
 const ExploreContainer = () => {
+  usePreload(preloadComponents);
+
   const {
     posts: {
       fetchPosts,

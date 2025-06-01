@@ -12,14 +12,16 @@ const PAGE_LIMIT = 20;
 export class PostsStore {
   list: ListStore<PostModel>;
 
-  constructor(private root: RootStore) {
+  constructor(public root: RootStore) {
     this.list = new ListStore<PostModel>({
       entityKey: POSTS,
       root,
       limit: PAGE_LIMIT,
     });
 
-    makeAutoObservable(this);
+    makeAutoObservable(this, {
+      root: false,
+    });
   }
 
   fetchPosts = withDuck<[options?: { force?: boolean }], void>(
@@ -50,6 +52,14 @@ export class PostsStore {
     });
 
     this.list.append(response);
+  });
+
+  fetchPostById = withDuck<[options?: { id?: string }], void>(async options => {
+    const id = options?.id;
+
+    const response = await this.root.api.Posts.getPostById(id);
+
+    this.list.updateItem(response);
   });
 
   reset() {

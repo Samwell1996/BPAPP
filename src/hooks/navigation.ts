@@ -66,15 +66,8 @@ export const useRouteKey = () => useContext(RouteObjectContext)?.key;
 export const useRabbitHoleKey = () =>
   useContext(RouteObjectContext)?.rabbitHoleKey;
 
-export const useNavigationParam = <
-  K extends keyof RootStackParamList[keyof RootStackParamList],
->(
-  paramName: K,
-  defaultValue: RootStackParamList[keyof RootStackParamList][K],
-) =>
-  useRouteParamsSelector(params =>
-    params && paramName in params ? params[paramName] : defaultValue,
-  );
+export const useNavigationParam = <T = any>(key: string, fallback: T): T =>
+  useRouteParamsSelector(params => (params?.[key] ?? fallback) as T);
 
 export const usePreviousRouteNameInStack = () =>
   useContext(RouteObjectContext)?.previousRouteNameInStack;

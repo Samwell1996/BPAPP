@@ -1,15 +1,13 @@
 import { createContext, useContext } from 'react';
 
-import { createRootStore } from '../helpers/creator';
+import { rootStore } from '../helpers/rootStoreInstance';
 import { RootStore } from '../root';
 
-const defaultStore = createRootStore();
-
-export const StoresContext = createContext<RootStore>(defaultStore);
+export const StoresContext = createContext<RootStore>(rootStore);
 
 export const StoreProvider = ({
   children,
-  value = defaultStore,
+  value = rootStore,
 }: {
   children: React.ReactNode;
   value?: RootStore;

@@ -1,5 +1,2 @@
-import { createRootStore } from './helpers/creator';
-
-export const stores = createRootStore();
-
+export { rootStore as stores } from './helpers/rootStoreInstance';
 export { RootStore } from './root';

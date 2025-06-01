@@ -26,6 +26,12 @@ export const SCREENS_TAB = {
 };
 
 export const SCREENS = {
+  [SCREEN_NAMES.POST]: {
+    screen: register({
+      name: SCREEN_NAMES.POST,
+      loader: () => import('@screens/Post'),
+    }),
+  },
   [SCREEN_NAMES.SETTINGS]: {
     screen: register({
       name: SCREEN_NAMES.SETTINGS,

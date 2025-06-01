@@ -5,7 +5,6 @@ import NavigationContainer from '@navigation/index';
 import { AppStateProvider } from '@services/appState';
 import reactotron from '@services/reactotron';
 import { StoreProvider } from '@stores/hooks/useStores';
-import { stores } from '@stores/index';
 import { ThemeProvider } from '@styles/theme';
 
 if (__DEV__) {
@@ -18,7 +17,7 @@ if (__DEV__) {
 const App = () => (
   <AppStateProvider>
     <ThemeProvider>
-      <StoreProvider value={stores}>
+      <StoreProvider>
         <NavigationContainer />
       </StoreProvider>
     </ThemeProvider>

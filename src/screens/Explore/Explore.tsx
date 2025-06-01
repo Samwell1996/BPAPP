@@ -9,6 +9,8 @@ import {
   RefreshControl,
 } from 'react-native';
 
+import { SCREEN_NAMES } from '@constants/navigation';
+import { useNavigation } from '@hooks/navigation';
 import { PostModel } from '@stores/Posts/model';
 
 import { useStyles } from './styles';
@@ -23,10 +25,14 @@ interface ExploreProps {
 
 const PostsGrid = (props: ExploreProps) => {
   const styles = useStyles();
+  const { navigate } = useNavigation();
 
   const renderItem = useCallback(
     ({ item }: { item: PostModel }) => (
-      <TouchableOpacity style={styles.tile}>
+      <TouchableOpacity
+        style={styles.tile}
+        onPress={() => navigate(SCREEN_NAMES.POST, { id: item.id })}
+      >
         <Text style={styles.title}>{item.title}</Text>
       </TouchableOpacity>
     ),

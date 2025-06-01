@@ -20,7 +20,12 @@ interface Store {
   notify: () => void;
 }
 
-const RouteParamsContext = createContext<Store | null>(null);
+const noop = () => () => {};
+const RouteParamsContext = createContext<Store>({
+  value: {},
+  subscribe: noop,
+  notify: () => {},
+});
 
 const StoreProvider = ({
   value,
@@ -31,12 +36,12 @@ const StoreProvider = ({
 }) => {
   const storeRef = useRef<Store | null>(null);
 
-  const store = storeRef.current;
+  let store = storeRef.current;
 
   if (!store) {
     const listeners = new Set<() => void>();
 
-    storeRef.current = {
+    store = {
       value,
       subscribe: listener => {
         listeners.add(listener);
@@ -44,6 +49,8 @@ const StoreProvider = ({
       },
       notify: () => listeners.forEach(listener => listener()),
     };
+
+    storeRef.current = store;
   }
 
   useEffect(() => {

@@ -20,6 +20,7 @@ interface ListSnapshot<T> {
   limit: number;
   reversed: boolean;
   idAttribute: keyof T;
+  entityKey: string;
 }
 
 export class ListStore<T extends { id: string | number }> {
@@ -27,7 +28,7 @@ export class ListStore<T extends { id: string | number }> {
   private pageSize: number;
   private entityKey: string;
   private reversed: boolean;
-  private root: RootStore;
+  public root: RootStore;
   private idAttribute: keyof T = 'id' as keyof T;
   public limit: number;
   public hasNoMore: boolean;
@@ -43,14 +44,17 @@ export class ListStore<T extends { id: string | number }> {
     this.reversed = options.reversed ?? false;
     this.hasNoMore = options.hasNoMore ?? false;
     this.idAttribute = options.idAttribute ?? 'id';
-    makeAutoObservable(this);
+
+    makeAutoObservable(this, {
+      root: false,
+    });
   }
 
-  private _processData(data: T[]) {
+  private _processData = (data: T[]) => {
     const { entities, result } = normalize(data, this.entityKey);
     this.root.entities.merge(entities);
     return result;
-  }
+  };
 
   get asArray() {
     return this.items.slice();
@@ -93,7 +97,7 @@ export class ListStore<T extends { id: string | number }> {
       .filter((item): item is T => !!item);
   }
 
-  push(data: T[]) {
+  push = (data: T[]) => {
     const ids = this._processData(data);
 
     runInAction(() => {
@@ -103,9 +107,9 @@ export class ListStore<T extends { id: string | number }> {
         this.items.unshift(...ids);
       }
     });
-  }
+  };
 
-  unshift(data: T[]) {
+  unshift = (data: T[]) => {
     const ids = this._processData(data);
     runInAction(() => {
       if (!this.reversed) {
@@ -114,24 +118,24 @@ export class ListStore<T extends { id: string | number }> {
         this.items.push(...ids);
       }
     });
-  }
+  };
 
-  checkIfHasMore(data: T[]) {
+  checkIfHasMore = (data: T[]) => {
     if (
       (typeof this.pageSize !== 'undefined' && data.length < this.pageSize) ||
       (typeof this.limit !== 'undefined' && data.length < this.limit)
     ) {
       this.hasNoMore = true;
     }
-  }
+  };
 
-  set(data: T[]) {
+  set = (data: T[]) => {
     const ids = this._processData(data);
     this.items = this.reversed ? ids.reverse() : ids;
     this.checkIfHasMore(data);
-  }
+  };
 
-  add(item: T) {
+  add = (item: T) => {
     const result = this._processData([item]);
 
     runInAction(() => {
@@ -143,9 +147,9 @@ export class ListStore<T extends { id: string | number }> {
         this.items.unshift(...ids);
       }
     });
-  }
+  };
 
-  append(items: T[]) {
+  append = (items: T[]) => {
     const ids = this._processData(items);
 
     runInAction(() => {
@@ -153,9 +157,9 @@ export class ListStore<T extends { id: string | number }> {
     });
 
     this.checkIfHasMore(items);
-  }
+  };
 
-  reset() {
+  reset = () => {
     this.items = [];
     this.pageSize = 10;
     this.limit = 10;
@@ -163,13 +167,12 @@ export class ListStore<T extends { id: string | number }> {
     this.hasNoMore = false;
     this.isHydrated = false;
     this.idAttribute = 'id' as keyof T;
-  }
+  };
 
-  findIndexById(id: string | number) {
-    return this.items.findIndex(itemId => itemId === id);
-  }
+  findIndexById = (id: string | number) =>
+    this.items.findIndex(itemId => itemId === id);
 
-  removeById(id: string | number) {
+  removeById = (id: string | number) => {
     const index = this.findIndexById(id);
 
     if (index < 0) {
@@ -177,13 +180,11 @@ export class ListStore<T extends { id: string | number }> {
     }
 
     this.items.splice(index, 1);
-  }
+  };
 
-  byIndex(index: number) {
-    return this.items[index];
-  }
+  byIndex = (index: number) => this.items[index];
 
-  includes(item: T): boolean {
+  includes = (item: T): boolean => {
     const id = item[this.idAttribute];
 
     if (typeof id !== 'string' && typeof id !== 'number') {
@@ -191,46 +192,55 @@ export class ListStore<T extends { id: string | number }> {
     }
 
     return this.items.includes(id);
-  }
+  };
 
-  findIndex(element: T): number {
+  findIndex = (element: T): number => {
     const id = element[this.idAttribute];
     return this.items.findIndex(itemId => itemId === id);
-  }
+  };
 
-  findById(id: string | number): T | undefined {
+  findById = (id: string | number | undefined): T | undefined => {
+    if (!id) {
+      return;
+    }
+
     return this.root.entities.getEntity<T>(this.entityKey, id);
-  }
+  };
 
-  setHasNoMore(value: boolean) {
+  public updateItem = (item: T) => {
+    this._processData([item]);
+  };
+
+  setHasNoMore = (value: boolean) => {
     this.hasNoMore = value;
-  }
+  };
 
-  getSnapshot(): ListSnapshot<T> {
-    return {
-      items: toJS(this.items),
-      pageSize: this.pageSize,
-      limit: this.limit,
-      reversed: this.reversed,
-      idAttribute: this.idAttribute,
-    };
-  }
+  getSnapshot = (): ListSnapshot<T> => ({
+    items: toJS(this.items),
+    pageSize: this.pageSize,
+    limit: this.limit,
+    reversed: this.reversed,
+    idAttribute: this.idAttribute,
+    entityKey: this.entityKey,
+  });
 
-  restoreFromSnapshot(snapshot: Partial<ListSnapshot<T>>) {
+  restoreFromSnapshot = (snapshot: Partial<ListSnapshot<T>>) => {
     if (!snapshot) {
       return;
     }
 
-    this.isHydrated = true;
     this.pageSize = snapshot.pageSize ?? this.pageSize;
     this.limit = snapshot.limit ?? this.limit;
     this.reversed = snapshot.reversed ?? this.reversed;
     this.idAttribute = snapshot.idAttribute ?? this.idAttribute;
+    this.entityKey = snapshot.entityKey ?? this.entityKey;
 
     if (Array.isArray(snapshot.items)) {
       this.items = [...snapshot.items];
     }
-  }
+
+    this.isHydrated = true;
+  };
 
   get list(): ListSnapshot<T> {
     return this.getSnapshot();

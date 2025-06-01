@@ -12,6 +12,7 @@ export const SCREEN_NAMES = {
   PROFILE: 'Profile',
   MARKETPLACE: 'Marketplace',
   EXPLORE: 'Explore',
+  POST: 'Post',
 
   SETTINGS: 'Settings',
 } as const;
@@ -51,5 +52,5 @@ export const GESTURE_DISABLED_MODALS: Partial<Record<ModalKey, boolean>> = {
  * and enables accurate typing inside `useRoute`, `navigate`, and custom hooks.
  */
 export type ManualParams = {
-  [SCREEN_NAMES.EXPLORE]: { itemId: string };
+  [SCREEN_NAMES.POST]: { id: string };
 };
