@@ -86,21 +86,12 @@ export class PersistService<TStore extends Record<string, any>> {
   }
 
   clear() {
-    Object.entries(this.config).forEach(([storeKey, keys]) => {
-      const storeInstance = this.store[storeKey];
-      if (!storeInstance) {
-        return;
-      }
-
+    for (const [storeKey, keys] of Object.entries(this.config)) {
       keys.forEach(key => {
         storage.delete(`${storeKey}.${key}`);
-
-        if (typeof storeInstance.restoreSnapshotForKey === 'function') {
-          storeInstance.restoreSnapshotForKey(key, {});
-        } else {
-          storeInstance[key] = null;
-        }
       });
-    });
+
+      this.store[storeKey]?.reset?.();
+    }
   }
 }

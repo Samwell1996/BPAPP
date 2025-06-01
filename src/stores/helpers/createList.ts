@@ -155,8 +155,14 @@ export class ListStore<T extends { id: string | number }> {
     this.checkIfHasMore(items);
   }
 
-  clear() {
+  reset() {
     this.items = [];
+    this.pageSize = 10;
+    this.limit = 10;
+    this.reversed = false;
+    this.hasNoMore = false;
+    this.isHydrated = false;
+    this.idAttribute = 'id' as keyof T;
   }
 
   findIndexById(id: string | number) {

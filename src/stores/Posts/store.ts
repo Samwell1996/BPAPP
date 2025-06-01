@@ -51,4 +51,8 @@ export class PostsStore {
 
     this.list.append(response);
   });
+
+  reset() {
+    this.list.reset();
+  }
 }

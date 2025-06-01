@@ -47,7 +47,7 @@ export class EntitiesStore {
     }
   }
 
-  clear() {
+  reset() {
     for (const key of Object.keys(this)) {
       if (typeof this[key] === 'object') {
         this[key] = {};

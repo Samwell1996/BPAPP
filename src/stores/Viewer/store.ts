@@ -27,4 +27,9 @@ export class ViewerStore {
   setIsLoggedIn = withDuck<[boolean], void>(async (isLoggedIn, _signal) => {
     this.isLoggedIn = isLoggedIn;
   });
+
+  reset() {
+    this.isLoggedIn = false;
+    this.user = null;
+  }
 }

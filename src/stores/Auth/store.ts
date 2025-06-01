@@ -23,7 +23,6 @@ export class AuthStore {
   logout = withDuck<[], void>(async _signal => {
     this.root.viewer.setIsLoggedIn.run(false);
     this.root.viewer.setUser.run(null);
-    this.root.entities.clear();
     this.root.persist.clear();
   });
 }
