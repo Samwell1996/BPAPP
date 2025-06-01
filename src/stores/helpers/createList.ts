@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from 'mobx';
+import { makeAutoObservable, runInAction, toJS } from 'mobx';
 
 import { RootStore } from '@stores/root';
 
@@ -14,6 +14,14 @@ interface ListStoreOptions<T> {
   idAttribute?: keyof T;
 }
 
+interface ListSnapshot<T> {
+  items: (string | number)[];
+  pageSize: number;
+  limit: number;
+  reversed: boolean;
+  idAttribute: keyof T;
+}
+
 export class ListStore<T extends { id: string | number }> {
   private items: (string | number)[];
   private pageSize: number;
@@ -23,6 +31,7 @@ export class ListStore<T extends { id: string | number }> {
   private idAttribute: keyof T = 'id' as keyof T;
   public limit: number;
   public hasNoMore: boolean;
+  public isHydrated: boolean;
 
   constructor(options: ListStoreOptions<T>) {
     this.items = [];
@@ -30,6 +39,7 @@ export class ListStore<T extends { id: string | number }> {
     this.root = options.root;
     this.pageSize = options.pageSize ?? 10;
     this.limit = options.limit ?? 10;
+    this.isHydrated = false;
     this.reversed = options.reversed ?? false;
     this.hasNoMore = options.hasNoMore ?? false;
     this.idAttribute = options.idAttribute ?? 'id';
@@ -188,5 +198,39 @@ export class ListStore<T extends { id: string | number }> {
 
   setHasNoMore(value: boolean) {
     this.hasNoMore = value;
+  }
+
+  getSnapshot(): ListSnapshot<T> {
+    return {
+      items: toJS(this.items),
+      pageSize: this.pageSize,
+      limit: this.limit,
+      reversed: this.reversed,
+      idAttribute: this.idAttribute,
+    };
+  }
+
+  restoreFromSnapshot(snapshot: Partial<ListSnapshot<T>>) {
+    if (!snapshot) {
+      return;
+    }
+
+    this.isHydrated = true;
+    this.pageSize = snapshot.pageSize ?? this.pageSize;
+    this.limit = snapshot.limit ?? this.limit;
+    this.reversed = snapshot.reversed ?? this.reversed;
+    this.idAttribute = snapshot.idAttribute ?? this.idAttribute;
+
+    if (Array.isArray(snapshot.items)) {
+      this.items = [...snapshot.items];
+    }
+  }
+
+  get list(): ListSnapshot<T> {
+    return this.getSnapshot();
+  }
+
+  set list(snapshot: Partial<ListSnapshot<T>>) {
+    this.restoreFromSnapshot(snapshot);
   }
 }

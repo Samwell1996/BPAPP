@@ -22,14 +22,22 @@ export class PostsStore {
     makeAutoObservable(this);
   }
 
-  fetchPosts = withDuck<[], void>(async _signal => {
-    const response = await this.root.api.Posts.getPosts({
-      _page: 1,
-      _limit: PAGE_LIMIT,
-    });
+  fetchPosts = withDuck<[options?: { force?: boolean }], void>(
+    async options => {
+      const force = options?.force ?? false;
 
-    this.list.set(response);
-  });
+      if (this.list.isHydrated && !force && !this.list.isEmpty) {
+        return;
+      }
+
+      const response = await this.root.api.Posts.getPosts({
+        _page: 1,
+        _limit: PAGE_LIMIT,
+      });
+
+      this.list.set(response);
+    },
+  );
 
   fetchMorePosts = withDuck<[], void>(async _signal => {
     if (this.list.hasNoMore) {

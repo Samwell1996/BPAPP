@@ -19,6 +19,10 @@ const ExploreContainer = () => {
     fetchPosts.run();
   }, []);
 
+  const onRefresh = useCallback(() => {
+    fetchPosts.run({ force: true });
+  }, []);
+
   const getMorePosts = useCallback(() => {
     if (fetchMorePosts.isLoading) {
       return;
@@ -34,7 +38,7 @@ const ExploreContainer = () => {
     isLoading: fetchPosts.isLoading,
     isLoadingMore: fetchMorePosts.isLoading,
     getMorePosts,
-    onRefresh: getPosts,
+    onRefresh,
     list: getList,
   };
 

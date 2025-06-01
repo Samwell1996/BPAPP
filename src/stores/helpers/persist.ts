@@ -21,20 +21,86 @@ export class PersistService<TStore extends Record<string, any>> {
       }
 
       for (const key of keys) {
-        const storedValue = storage.getString(`${storeKey}.${key}`);
-        if (storedValue) {
-          try {
-            storeInstance[key] = JSON.parse(storedValue);
-          } catch {}
+        const storageKey = `${storeKey}.${key}`;
+
+        // Entity-style API
+        if (
+          typeof storeInstance.getSnapshotForKey === 'function' &&
+          typeof storeInstance.restoreSnapshotForKey === 'function'
+        ) {
+          const saved = storage.getString(storageKey);
+          if (saved) {
+            try {
+              storeInstance.restoreSnapshotForKey(key, JSON.parse(saved));
+            } catch (e) {
+              console.warn(`Restore failed for ${storageKey}`, e);
+            }
+          }
+          continue;
         }
 
-        reaction(
-          () => toJS(storeInstance[key]),
-          value => {
-            storage.set(`${storeKey}.${key}`, JSON.stringify(value));
-          },
-        );
+        // Standard snapshotable object
+        const target = storeInstance[key];
+        const isSnapshotable =
+          target &&
+          typeof target.getSnapshot === 'function' &&
+          typeof target.restoreFromSnapshot === 'function';
+
+        const getValue = () =>
+          toJS(isSnapshotable ? target.getSnapshot() : target);
+
+        const stored = storage.getString(storageKey);
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            isSnapshotable
+              ? target.restoreFromSnapshot(parsed)
+              : (storeInstance[key] = parsed);
+          } catch (err) {
+            console.warn(`Restore failed for ${storageKey}`, err);
+          }
+        }
+
+        reaction(getValue, value => {
+          try {
+            const json = JSON.stringify(value);
+            storage.set(storageKey, json);
+          } catch (err) {
+            console.warn(`Persist failed for ${storageKey}`, err);
+          }
+        });
       }
     }
+  }
+
+  persistEntitiesKey(key: string) {
+    try {
+      const snapshot = this.store.entities?.getSnapshotForKey?.(key);
+      if (!snapshot) {
+        return;
+      }
+      storage.set(`entities.${key}`, JSON.stringify(snapshot));
+    } catch (err) {
+      console.warn(`Manual persist failed for entities.${key}`, err);
+    }
+  }
+
+  clear() {
+    Object.entries(this.config).forEach(([storeKey, keys]) => {
+      const storeInstance = this.store[storeKey];
+      if (!storeInstance) {
+        return;
+      }
+
+      keys.forEach(key => {
+        storage.delete(`${storeKey}.${key}`);
+
+        if (typeof storeInstance.restoreSnapshotForKey === 'function') {
+          storeInstance.restoreSnapshotForKey(key, {});
+        } else {
+          storeInstance[key] = null;
+        }
+      });
+    });
   }
 }

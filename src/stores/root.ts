@@ -26,12 +26,14 @@ export class RootStore implements IRootStore {
   viewers: ViewersStore;
   posts: PostsStore;
 
-  private persist: PersistService<RootStore>;
+  public persist: PersistService<RootStore>;
 
   isInitialized = false;
 
   constructor(private deps: RootStoreDeps) {
-    this.entities = new EntitiesStore();
+    this.entities = new EntitiesStore(key =>
+      this.persist.persistEntitiesKey(key),
+    );
 
     this.auth = new AuthStore(this);
     this.viewer = new ViewerStore(this);
@@ -42,6 +44,8 @@ export class RootStore implements IRootStore {
 
     const persistConfig: PersistConfig = {
       viewer: ['user', 'isLoggedIn'],
+      entities: ['posts'],
+      posts: ['list'],
     };
 
     this.persist = new PersistService(this, persistConfig);

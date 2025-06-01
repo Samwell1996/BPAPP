@@ -15,7 +15,6 @@ export const screenStackUnAuthorizedScreenOptions: NativeStackNavigationOptions 
     headerShown: false,
     animation: 'slide_from_right',
     contentStyle: {
-      paddingTop: Device.inset.top,
       paddingBottom: Device.inset.bottom,
     },
   };
