@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import RNConfig, { NativeConfig } from 'react-native-config';
 
 const { API_URL }: NativeConfig = RNConfig;
@@ -19,50 +19,38 @@ export class Api {
   get<TResponse, TConfig extends AxiosRequestConfig = AxiosRequestConfig>(
     url: string,
     config?: TConfig,
-  ): Promise<AxiosResponse<TResponse>> {
-    return this.client.get(url, config);
+  ): Promise<TResponse> {
+    return this.client.get(url, config).then(res => res.data);
   }
 
   post<
     TResponse,
     TBody = unknown,
     TConfig extends AxiosRequestConfig = AxiosRequestConfig,
-  >(
-    url: string,
-    data?: TBody,
-    config?: TConfig,
-  ): Promise<AxiosResponse<TResponse>> {
-    return this.client.post(url, data, config);
+  >(url: string, data?: TBody, config?: TConfig): Promise<TResponse> {
+    return this.client.post(url, data, config).then(res => res.data);
   }
 
   put<
     TResponse,
     TBody = unknown,
     TConfig extends AxiosRequestConfig = AxiosRequestConfig,
-  >(
-    url: string,
-    data?: TBody,
-    config?: TConfig,
-  ): Promise<AxiosResponse<TResponse>> {
-    return this.client.put(url, data, config);
+  >(url: string, data?: TBody, config?: TConfig): Promise<TResponse> {
+    return this.client.put(url, data, config).then(res => res.data);
   }
 
   patch<
     TResponse,
     TBody = unknown,
     TConfig extends AxiosRequestConfig = AxiosRequestConfig,
-  >(
-    url: string,
-    data?: TBody,
-    config?: TConfig,
-  ): Promise<AxiosResponse<TResponse>> {
-    return this.client.patch(url, data, config);
+  >(url: string, data?: TBody, config?: TConfig): Promise<TResponse> {
+    return this.client.patch(url, data, config).then(res => res.data);
   }
 
   delete<TResponse, TConfig extends AxiosRequestConfig = AxiosRequestConfig>(
     url: string,
     config?: TConfig,
-  ): Promise<AxiosResponse<TResponse>> {
-    return this.client.delete(url, config);
+  ): Promise<TResponse> {
+    return this.client.delete(url, config).then(res => res.data);
   }
 }

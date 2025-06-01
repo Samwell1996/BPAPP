@@ -20,7 +20,7 @@ const ScreenIcon = ({ focused, name }: { focused: boolean; name: string }) => {
   const icons: Record<string, React.ReactElement> = {
     [SCREEN_NAMES.EXPLORE]: (
       <View>
-        <Text>{focused ? 'F' : ''}</Text>
+        <Text>{focused ? 'Icon' : 'Icon'}</Text>
       </View>
     ),
     [SCREEN_NAMES.MARKETPLACE]: <View />,
@@ -31,7 +31,7 @@ const ScreenIcon = ({ focused, name }: { focused: boolean; name: string }) => {
 };
 
 const tabBarOptions = {
-  headerTitle: '',
+  headerShown: false,
   tabBarAllowFontScaling: false,
   safeAreaInsets: {
     bottom: Device.inset.bottom,

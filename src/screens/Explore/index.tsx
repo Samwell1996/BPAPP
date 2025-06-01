@@ -1,5 +1,44 @@
-import { View } from 'react-native';
+import { useCallback, useEffect } from 'react';
 
-const Explore = () => <View style={{ backgroundColor: 'red', flex: 1 }} />;
+import { observer } from 'mobx-react-lite';
 
-export default Explore;
+import { useStores } from '@stores/hooks/useStores';
+
+import Explore from './Explore';
+
+const ExploreContainer = () => {
+  const {
+    posts: {
+      fetchPosts,
+      list: { getList },
+      fetchMorePosts,
+    },
+  } = useStores();
+
+  const getPosts = useCallback(() => {
+    fetchPosts.run();
+  }, []);
+
+  const getMorePosts = useCallback(() => {
+    if (fetchMorePosts.isLoading) {
+      return;
+    }
+    fetchMorePosts.run();
+  }, [fetchMorePosts.isLoading]);
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  const props = {
+    isLoading: fetchPosts.isLoading,
+    isLoadingMore: fetchMorePosts.isLoading,
+    getMorePosts,
+    onRefresh: getPosts,
+    list: getList,
+  };
+
+  return <Explore {...props} />;
+};
+
+export default observer(ExploreContainer);

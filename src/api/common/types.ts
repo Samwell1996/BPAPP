@@ -1,4 +1,5 @@
 export interface ResponseMessage {
+  data: any;
   success: boolean;
   error?: string;
 }

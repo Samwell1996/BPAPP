@@ -17,6 +17,7 @@ export const themeBase: IBaseThemeSchema = {
     primary: palette.black,
     backgroundSecondary: palette.white,
     text: palette.black,
+    red53: palette.red53,
     transparent: palette.transparent,
   },
   lineHeight: {

@@ -5,6 +5,7 @@ import { Api } from '@api';
 import { AuthStore } from './Auth/store';
 import { EntitiesStore } from './helpers/entities';
 import { PersistConfig, PersistService } from './helpers/persist';
+import { PostsStore } from './Posts/store';
 import { ViewerStore } from './Viewer/store';
 import { ViewersStore } from './Viewers/store';
 
@@ -23,6 +24,7 @@ export class RootStore implements IRootStore {
   viewer: ViewerStore;
 
   viewers: ViewersStore;
+  posts: PostsStore;
 
   private persist: PersistService<RootStore>;
 
@@ -34,6 +36,7 @@ export class RootStore implements IRootStore {
     this.auth = new AuthStore(this);
     this.viewer = new ViewerStore(this);
     this.viewers = new ViewersStore(this);
+    this.posts = new PostsStore(this);
 
     makeAutoObservable(this);
 

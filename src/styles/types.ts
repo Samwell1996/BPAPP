@@ -8,7 +8,8 @@ export type IColor =
   | 'primary'
   | 'backgroundSecondary'
   | 'text'
-  | 'transparent';
+  | 'transparent'
+  | 'red53';
 
 export interface IThemeTextStyle {
   color: string;

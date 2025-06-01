@@ -19,9 +19,9 @@ export class ListStore<T extends { id: string | number }> {
   private pageSize: number;
   private entityKey: string;
   private reversed: boolean;
-  private limit: number;
   private root: RootStore;
   private idAttribute: keyof T = 'id' as keyof T;
+  public limit: number;
   public hasNoMore: boolean;
 
   constructor(options: ListStoreOptions<T>) {
@@ -54,25 +54,19 @@ export class ListStore<T extends { id: string | number }> {
     return this.items[this.count - 1];
   }
 
-  get isEmpty() {
+  get isEmpty(): boolean {
     return this.items.length === 0;
   }
 
-  get count() {
+  get count(): number {
     return this.items.length;
   }
 
   get pageNumber() {
-    const pages = this.count / (this.pageSize || this.limit);
-
-    if (Number.isInteger(pages)) {
-      return pages + 1;
-    }
-
-    return undefined;
+    return Math.floor(this.count / this.limit) + 1;
   }
 
-  get offset() {
+  get offset(): number {
     const pages = this.count / (this.pageSize || this.limit) + 1;
     const countOffset = (pages - 1) * (this.pageSize || this.limit);
 
@@ -118,8 +112,6 @@ export class ListStore<T extends { id: string | number }> {
       (typeof this.limit !== 'undefined' && data.length < this.limit)
     ) {
       this.hasNoMore = true;
-    } else {
-      this.hasNoMore = false;
     }
   }
 
@@ -141,6 +133,16 @@ export class ListStore<T extends { id: string | number }> {
         this.items.unshift(...ids);
       }
     });
+  }
+
+  append(items: T[]) {
+    const ids = this._processData(items);
+
+    runInAction(() => {
+      this.items.push(...ids);
+    });
+
+    this.checkIfHasMore(items);
   }
 
   clear() {
