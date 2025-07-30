@@ -62,6 +62,16 @@ export class PostsStore {
     this.list.updateItem(response);
   });
 
+  fetchSpeech = withDuck<[options?: { audioUrl: string }], void>(
+    async options => {
+      const audioUrl = options?.audioUrl;
+
+      const response = await this.root.api.Auth.speechRecognition(audioUrl);
+
+      return response;
+    },
+  );
+
   reset() {
     this.list.reset();
   }
